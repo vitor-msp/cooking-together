@@ -15,10 +15,11 @@ export default class UsersController {
     }
   }
 
-  public async store({ request }: HttpContextContract): Promise<{ id: string }> {
+  public async store({ request, response }: HttpContextContract): Promise<{ id: string }> {
     const input: Record<string, string> = request.body()
     const { email, name, password } = input
     const user = await prisma.user.create({ data: { name, email, password } })
+    response.status(201)
     return {
       id: user.id,
     }
