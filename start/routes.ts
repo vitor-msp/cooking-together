@@ -22,3 +22,4 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.resource('/users', 'UsersController').apiOnly()
 Route.patch('/users/:id/password', 'UsersController.changePassword')
+Route.resource('/recipes', 'RecipesController').apiOnly()
