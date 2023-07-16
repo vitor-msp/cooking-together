@@ -23,4 +23,31 @@ export default class UsersController {
       id: user.id,
     }
   }
+
+  public async update({ request, params }: HttpContextContract): Promise<{ id: string }> {
+    const id: string = params.id
+    const input: Record<string, string> = request.body()
+    const user = await prisma.user.findUniqueOrThrow({ where: { id } })
+    if (input.name) user.name = input.name
+    if (input.email) user.email = input.email
+    const { name, email } = user
+    await prisma.user.update({ where: { id }, data: { name, email } })
+    return {
+      id: user.id,
+    }
+  }
+
+  public async changePassword({ request, params }: HttpContextContract): Promise<{ id: string }> {
+    const id: string = params.id
+    const input: Record<string, string> = request.body()
+    if (!input.oldPassword) throw new Error('missing old password')
+    if (!input.newPassword) throw new Error('missing new password')
+    const user = await prisma.user.findUniqueOrThrow({ where: { id } })
+    if (user.password !== input.oldPassword) throw new Error('incorrect password')
+    user.password = input.newPassword
+    await prisma.user.update({ where: { id }, data: { password: user.password } })
+    return {
+      id: user.id,
+    }
+  }
 }
