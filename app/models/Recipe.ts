@@ -16,7 +16,7 @@ export type Recipe = {
 
 type Ingredient = {
   quantity: number
-  unitOfMeasurment: string
+  unitOfMeasurement: string
   product: string
 }
 

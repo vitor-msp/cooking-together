@@ -45,16 +45,49 @@ export default class RecipesController {
     }
   }
 
-  //   public async update({ request, params }: HttpContextContract): Promise<{ id: string }> {
-  //     const id: string = params.id
-  //     const input: Record<string, string> = request.body()
-  //     const recipe = await prisma.recipe.findUniqueOrThrow({ where: { id } })
-  //     if (input.name) recipe.name = input.name
-  //     if (input.email) recipe.email = input.email
-  //     const { name, email } = recipe
-  //     await prisma.recipe.update({ where: { id }, data: { name, email } })
-  //     return {
-  //       id: recipe.id,
-  //     }
-  //   }
+  public async update({ request, params }: HttpContextContract): Promise<{ id: string }> {
+    const id: string = params.id
+    const input: Record<string, string> = request.body()
+    const recipe = await prisma.recipe.findUniqueOrThrow({
+      where: { id },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        servings: true,
+        totalTimeInMinutes: true,
+        ingredients: true,
+        directions: true,
+      },
+    })
+    if (input.title) recipe.title = input.title
+    if (input.description) recipe.description = input.description
+    if (input.servings) recipe.servings = +input.servings
+    if (input.totalTimeInMinutes) recipe.totalTimeInMinutes = +input.totalTimeInMinutes
+    if (input.ingredients) recipe.ingredients = JSON.parse(JSON.stringify(input.ingredients))
+    if (input.directions) recipe.directions = JSON.parse(JSON.stringify(input.directions))
+    await prisma.recipe.update({
+      where: { id },
+      data: {
+        title: recipe.title,
+        description: recipe.description,
+        servings: recipe.servings,
+        totalTimeInMinutes: recipe.totalTimeInMinutes,
+        ingredients: recipe.ingredients,
+        directions: recipe.directions,
+        updatedAt: new Date(),
+      },
+    })
+    return {
+      id,
+    }
+  }
+
+  public async destroy({ params }: HttpContextContract): Promise<{ id: string }> {
+    const id: string = params.id
+    await prisma.recipe.delete({ where: { id } })
+    return {
+      id,
+    }
+  }
 }
