@@ -5,7 +5,10 @@ import { User } from 'App/models/User'
 export default class UsersController {
   public async show({ params }: HttpContextContract): Promise<User> {
     const id: string = params.id
-    const user = await prisma.user.findUniqueOrThrow({ where: { id } })
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id },
+      select: { email: true, name: true, id: true, createdAt: true },
+    })
     const { email, name, createdAt } = user
     return {
       id: user.id,
@@ -28,7 +31,10 @@ export default class UsersController {
   public async update({ request, params }: HttpContextContract): Promise<{ id: string }> {
     const id: string = params.id
     const input: Record<string, string> = request.body()
-    const user = await prisma.user.findUniqueOrThrow({ where: { id } })
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id },
+      select: { email: true, name: true, id: true },
+    })
     if (input.name) user.name = input.name
     if (input.email) user.email = input.email
     const { name, email } = user
@@ -43,7 +49,10 @@ export default class UsersController {
     const input: Record<string, string> = request.body()
     if (!input.oldPassword) throw new Error('missing old password')
     if (!input.newPassword) throw new Error('missing new password')
-    const user = await prisma.user.findUniqueOrThrow({ where: { id } })
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id },
+      select: { id: true, password: true },
+    })
     if (user.password !== input.oldPassword) throw new Error('incorrect password')
     user.password = input.newPassword
     await prisma.user.update({ where: { id }, data: { password: user.password } })
