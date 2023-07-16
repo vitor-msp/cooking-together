@@ -1,6 +1,7 @@
 import { prisma } from '@ioc:Adonis/Addons/Prisma'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { Recipe } from 'App/models/Recipe'
+import { QueryItems } from 'App/utils/QueryItems'
 
 type RecipeQuery = {
   title?: string
@@ -16,7 +17,7 @@ type RecipeQuery = {
 
 export default class RecipesController {
   public async index({ request }: HttpContextContract): Promise<Recipe[]> {
-    const queryItems = this.parseQueryItems(request.parsedUrl.query ?? '')
+    const queryItems: RecipeQuery = QueryItems.parse(request.parsedUrl.query ?? '')
     const recipes = await prisma.recipe.findMany({
       where: {
         AND: this.generateWhereFilter(queryItems),
@@ -40,16 +41,6 @@ export default class RecipesController {
         updatedAt: updatedAt.toISOString(),
       }
     })
-  }
-
-  private parseQueryItems(query: string): RecipeQuery {
-    const items: string[] = query.split('&')
-    const queryItems: RecipeQuery = {}
-    items.forEach((i) => {
-      const [key, value] = i.split('=')
-      queryItems[decodeURIComponent(key)] = decodeURIComponent(value)
-    })
-    return queryItems
   }
 
   private generateWhereFilter(queryItems: RecipeQuery): any[] {
