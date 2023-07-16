@@ -65,6 +65,7 @@ export default class RecipesController {
       include: { User: { select: { id: true, name: true } } },
     })
     return {
+      id: recipe.id,
       title: recipe.title,
       description: recipe.description,
       servings: recipe.servings,
