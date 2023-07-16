@@ -10,6 +10,8 @@ type RecipeQuery = {
   totalTimeInMinutesTo?: number
   ingredients?: string
   userId?: string
+  skip?: number
+  count?: number
 }
 
 export default class RecipesController {
@@ -17,8 +19,10 @@ export default class RecipesController {
     const queryItems = this.parseQueryItems(request.parsedUrl.query ?? '')
     const recipes = await prisma.recipe.findMany({
       where: {
-        AND: this.analyzeQuery(queryItems),
+        AND: this.generateWhereFilter(queryItems),
       },
+      skip: queryItems.skip ? +queryItems.skip : 0,
+      take: queryItems.count ? +queryItems.count : 20,
       select: {
         id: true,
         title: true,
@@ -48,7 +52,7 @@ export default class RecipesController {
     return queryItems
   }
 
-  private analyzeQuery(queryItems: RecipeQuery): any[] {
+  private generateWhereFilter(queryItems: RecipeQuery): any[] {
     const AND: any[] = []
     if (queryItems.title) AND.push({ title: { contains: queryItems.title } })
     if (queryItems.servingsFrom) AND.push({ servings: { gte: +queryItems.servingsFrom } })
