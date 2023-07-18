@@ -20,9 +20,19 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.resource('/users', 'UsersController').apiOnly()
-Route.patch('/users/:id/password', 'UsersController.changePassword')
+// public routes
+Route.post('/register', 'AuthUsersController.register')
 Route.post('/login', 'AuthUsersController.login')
 Route.post('/logout', 'AuthUsersController.logout')
-Route.resource('/recipes', 'RecipesController').apiOnly()
-Route.resource('/comments', 'CommentsController').apiOnly()
+
+// authenticated routes
+Route.resource('/users', 'UsersController')
+  .apiOnly()
+  .middleware({ '*': ['auth'] })
+Route.patch('/users/:id/password', 'UsersController.changePassword').middleware(['auth'])
+Route.resource('/recipes', 'RecipesController')
+  .apiOnly()
+  .middleware({ '*': ['auth'] })
+Route.resource('/comments', 'CommentsController')
+  .apiOnly()
+  .middleware({ '*': ['auth'] })

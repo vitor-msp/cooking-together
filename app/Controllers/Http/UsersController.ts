@@ -1,6 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { v4 as uuidv4 } from 'uuid'
 import User, { UserDto } from 'App/Models/User'
 
 export default class UsersController {
@@ -17,18 +16,6 @@ export default class UsersController {
       email,
       name,
       createdAt: createdAt.toISO() ?? '',
-    }
-  }
-
-  public async store({ request, response }: HttpContextContract): Promise<{ id: string }> {
-    const input: Record<string, string> = request.body()
-    const { email, name, password } = input
-    const id: string = uuidv4()
-    const hashedPassword = await Hash.make(password)
-    const user = await User.create({ idmain: id, email, name, password: hashedPassword })
-    response.status(201)
-    return {
-      id: user.idmain,
     }
   }
 
