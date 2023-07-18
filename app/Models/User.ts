@@ -11,10 +11,10 @@ export type UserDto = {
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
-  public pk: number
+  public id: number
 
   @column()
-  public id: string
+  public idmain: string
 
   @column()
   public name: string
