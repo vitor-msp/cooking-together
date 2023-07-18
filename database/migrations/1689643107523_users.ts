@@ -13,7 +13,7 @@ export default class extends BaseSchema {
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
-      table.datetime('created_at', { useTz: true })
+      table.datetime('createdat', { useTz: true })
     })
   }
 

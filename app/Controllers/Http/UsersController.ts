@@ -1,27 +1,27 @@
-import { prisma } from '@ioc:Adonis/Addons/Prisma'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { UserDto } from 'App/Models/User'
+import User, { UserDto } from 'App/Models/User'
 
 export default class UsersController {
   public async show({ params }: HttpContextContract): Promise<UserDto> {
     const id: string = params.id
-    const user = await prisma.user.findUniqueOrThrow({
-      where: { id },
-      select: { email: true, name: true, id: true, createdAt: true },
-    })
+    const user = await User.query()
+      .where('id', id)
+      .select(['id', 'email', 'name', 'createdat'])
+      .first()
+    if (!user) throw new Error('user not found')
     const { email, name, createdAt } = user
     return {
       id: user.id,
       email,
       name,
-      createdAt: createdAt.toISOString(),
+      createdAt: createdAt.toISO() ?? '',
     }
   }
 
   public async store({ request, response }: HttpContextContract): Promise<{ id: string }> {
     const input: Record<string, string> = request.body()
     const { email, name, password } = input
-    const user = await prisma.user.create({ data: { name, email, password } })
+    const user = await User.create({ email, name, password })
     response.status(201)
     return {
       id: user.id,
@@ -31,14 +31,11 @@ export default class UsersController {
   public async update({ request, params }: HttpContextContract): Promise<{ id: string }> {
     const id: string = params.id
     const input: Record<string, string> = request.body()
-    const user = await prisma.user.findUniqueOrThrow({
-      where: { id },
-      select: { email: true, name: true, id: true },
-    })
+    const user = await User.query().where('id', id).select(['id', 'email', 'name']).first()
+    if (!user) throw new Error('user not found')
     if (input.name) user.name = input.name
     if (input.email) user.email = input.email
-    const { name, email } = user
-    await prisma.user.update({ where: { id }, data: { name, email } })
+    await user.save()
     return {
       id: user.id,
     }
@@ -49,13 +46,11 @@ export default class UsersController {
     const input: Record<string, string> = request.body()
     if (!input.oldPassword) throw new Error('missing old password')
     if (!input.newPassword) throw new Error('missing new password')
-    const user = await prisma.user.findUniqueOrThrow({
-      where: { id },
-      select: { id: true, password: true },
-    })
+    const user = await User.query().where('id', id).select(['id', 'password']).first()
+    if (!user) throw new Error('user not found')
     if (user.password !== input.oldPassword) throw new Error('incorrect password')
     user.password = input.newPassword
-    await prisma.user.update({ where: { id }, data: { password: user.password } })
+    user.save()
     return {
       id: user.id,
     }
