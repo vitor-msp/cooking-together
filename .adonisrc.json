@@ -22,7 +22,8 @@
     "./providers/AppProvider",
     "@adonisjs/core",
     "@wahyubucil/adonis-prisma",
-    "@adonisjs/lucid"
+    "@adonisjs/lucid",
+    "@adonisjs/auth"
   ],
   "aceProviders": [
     "@adonisjs/repl"
