@@ -1,6 +1,6 @@
 import { prisma } from '@ioc:Adonis/Addons/Prisma'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { Recipe } from 'App/models/Recipe'
+import { Recipe } from 'App/Models/Recipe'
 import { QueryItems } from 'App/utils/QueryItems'
 
 type RecipeQuery = {

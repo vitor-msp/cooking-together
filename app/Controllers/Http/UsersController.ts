@@ -1,9 +1,9 @@
 import { prisma } from '@ioc:Adonis/Addons/Prisma'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { User } from 'App/models/User'
+import { UserDto } from 'App/Models/User'
 
 export default class UsersController {
-  public async show({ params }: HttpContextContract): Promise<User> {
+  public async show({ params }: HttpContextContract): Promise<UserDto> {
     const id: string = params.id
     const user = await prisma.user.findUniqueOrThrow({
       where: { id },
