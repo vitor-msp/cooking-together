@@ -64,6 +64,7 @@
     "@prisma/client": "^5.0.0",
     "@wahyubucil/adonis-prisma": "^0.4.0",
     "mysql2": "^3.5.2",
+    "phc-argon2": "^1.1.4",
     "proxy-addr": "^2.0.7",
     "reflect-metadata": "^0.1.13",
     "source-map-support": "^0.5.21",
