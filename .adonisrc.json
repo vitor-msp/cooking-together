@@ -4,7 +4,8 @@
     "./commands",
     "@adonisjs/core/build/commands/index.js",
     "@adonisjs/repl/build/commands",
-    "@wahyubucil/adonis-prisma/build/commands"
+    "@wahyubucil/adonis-prisma/build/commands",
+    "@adonisjs/lucid/build/commands"
   ],
   "exceptionHandlerNamespace": "App/Exceptions/Handler",
   "aliases": {
@@ -20,7 +21,8 @@
   "providers": [
     "./providers/AppProvider",
     "@adonisjs/core",
-    "@wahyubucil/adonis-prisma"
+    "@wahyubucil/adonis-prisma",
+    "@adonisjs/lucid"
   ],
   "aceProviders": [
     "@adonisjs/repl"

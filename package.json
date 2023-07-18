@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "@adonisjs/core": "^5.9.0",
+    "@adonisjs/lucid": "^18.4.0",
     "@adonisjs/repl": "^3.1.11",
     "@prisma/client": "^5.0.0",
     "@wahyubucil/adonis-prisma": "^0.4.0",
