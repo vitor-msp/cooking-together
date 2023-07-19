@@ -1,9 +1,9 @@
-import { User } from './User.old'
+import { UserDto } from './User'
 
 export type Comment = {
   id?: string
   recipeId?: string
-  user?: User
+  user?: UserDto
   userId?: string
   text?: string
   createdAt?: string

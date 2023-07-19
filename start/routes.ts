@@ -34,6 +34,7 @@ Route.group(() => {
 Route.group(() => {
   Route.get('/recipes', 'RecipesController.index')
   Route.get('/recipes/:id', 'RecipesController.show')
+  Route.get('/comments', 'CommentsController.index')
 }).middleware('auth')
 
 Route.group(() => {
@@ -44,5 +45,6 @@ Route.group(() => {
   Route.patch('/recipes/:id', 'RecipesController.update')
   Route.delete('/recipes/:id', 'RecipesController.destroy')
 
-  Route.resource('/comments', 'CommentsController').apiOnly()
+  Route.post('/comments', 'CommentsController.store')
+  Route.delete('/comments/:id', 'CommentsController.destroy')
 }).middleware(['auth', 'ModifyQuery'])

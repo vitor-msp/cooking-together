@@ -1,4 +1,4 @@
-import { User } from './User.old'
+import { UserDto } from './User'
 
 export type Recipe = {
   id?: string
@@ -10,7 +10,7 @@ export type Recipe = {
   directions?: Direction[]
   createdAt?: string
   updatedAt?: string
-  user?: User
+  user?: UserDto
   userId?: string
 }
 
