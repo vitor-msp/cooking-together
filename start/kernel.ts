@@ -41,4 +41,5 @@ Server.middleware.register([() => import('@ioc:Adonis/Core/BodyParser')])
 Server.middleware.registerNamed({
   auth: () => import('App/Middleware/Auth'),
   UserRoutesAuth: () => import('App/Middleware/UserRoutesAuth'),
+  OtherRoutesAuth: () => import('App/Middleware/OtherRoutesAuth'),
 })

@@ -1,6 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class CustomAuthMiddleware {
+export default class UserRoutesAuth {
   protected redirectTo = '/login'
 
   protected async checkTokenAndParam(
