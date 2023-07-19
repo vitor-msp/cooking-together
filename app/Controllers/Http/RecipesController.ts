@@ -78,7 +78,7 @@ export default class RecipesController {
       createdAt: recipe.createdAt.toISOString(),
       updatedAt: recipe.updatedAt.toISOString(),
       user: {
-        id: user.id,
+        id: user.idmain,
         name: user.name,
       },
     }

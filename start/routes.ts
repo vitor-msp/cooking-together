@@ -47,4 +47,8 @@ Route.group(() => {
 
   Route.post('/comments', 'CommentsController.store')
   Route.delete('/comments/:id', 'CommentsController.destroy')
+
+  Route.post('/favorites', 'FavoritesController.store')
+  Route.delete('/favorites/:id', 'FavoritesController.destroy')
+  Route.get('/favorites', 'FavoritesController.index')
 }).middleware(['auth', 'ModifyQuery'])
