@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sleep 5
-
 mongosh <<EOF
 var config = {
     "_id": "rs0",

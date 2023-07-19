@@ -11,35 +11,33 @@ services:
       - MYSQL_PASSWORD=$MYSQL_PASSWORD
       - MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD
       - MYSQL_DATABASE=$MYSQL_DB_NAME
-    # volumes: 
-    #   - dbdata:/var/lib/mysql
-    command: '--default-authentication-plugin=mysql_native_password'
-    ports:
-      - "3306:3306"
-    # networks:
-    #   - app-network
-
+    networks:
+      - backend-network
 
   mongo1:
-    container_name: mongo1
     image: mongo
+    container_name: mongo1
+    restart: unless-stopped
     volumes:
-      - ./mongo-rs-init.sh:/scripts/mongo-rs-init.sh
-    # networks:
-    #   - mongo-network
-    ports:
-      - 27017:27017
-    # restart: always
+      - ./scripts/mongo-rs-init.sh:/scripts/mongo-rs-init.sh
+    networks:
+      - backend-network
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
 
-  # api:
-  #   container_name: api
-  #   image: node
-  #   stdin_open: true
-  #   tty: true
-  #   ports:
-  #     - 3333:3333
+  api:
+    image: vitormsp/cooking_together_api
+    container_name: api
+    env_file: .env
+    volumes:
+      - ./scripts/run-migrations.sh:/cooking-together/run-migrations.sh
+    networks:
+      - backend-network
+    ports:
+      - $PORT:$PORT
+    depends_on:
+      - mysql
+      - mongo1
 
-# networks:
-#   mongo-network:
-#     driver: bridge
+networks:
+  backend-network:
+    driver: bridge
