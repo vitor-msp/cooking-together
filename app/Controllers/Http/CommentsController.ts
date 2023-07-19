@@ -5,8 +5,8 @@ import User, { UserDto } from 'App/Models/User'
 import { QueryItems } from 'App/utils/QueryItems'
 
 export default class CommentsController {
-  public async index({ request }: HttpContextContract): Promise<Comment[]> {
-    const recipeId = QueryItems.parse(request.parsedUrl.query ?? '')['recipeId']
+  public async index({ params }: HttpContextContract): Promise<Comment[]> {
+    const recipeId = params.recipeid
     if (!recipeId) throw new Error('missing recipeId')
     const recipe = await prisma.comment.findMany({
       where: { recipeId },
@@ -33,11 +33,12 @@ export default class CommentsController {
     }
   }
 
-  public async store({ request, response }: HttpContextContract): Promise<{ id: string }> {
-    const input: Record<string, string> = request.body()
+  public async store({ request, params, response }: HttpContextContract): Promise<{ id: string }> {
+    const text = request.body()['text']
+    const recipeId = params.recipeid
     const userId = QueryItems.parse(request.parsedUrl.query ?? '')['userId']
     if (!userId) throw new Error('missing user id')
-    const { recipeId, text }: Comment = input
+    await prisma.recipe.findUniqueOrThrow({ where: { id: recipeId } })
     const comment = await prisma.comment.create({ data: { recipeId, userId, text } })
     response.status(201)
     return {
@@ -46,7 +47,7 @@ export default class CommentsController {
   }
 
   public async destroy({ request, params }: HttpContextContract): Promise<{ id: string }> {
-    const id: string = params.id
+    const id: string = params.commentid
     const userId = QueryItems.parse(request.parsedUrl.query ?? '')['userId']
     if (!userId) throw new Error('missing user id')
     await prisma.comment.delete({ where: { id, userId } })

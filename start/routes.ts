@@ -34,7 +34,7 @@ Route.group(() => {
 Route.group(() => {
   Route.get('/recipes', 'RecipesController.index')
   Route.get('/recipes/:id', 'RecipesController.show')
-  Route.get('/comments', 'CommentsController.index')
+  Route.get('/recipes/:recipeid/comments', 'CommentsController.index')
 }).middleware('auth')
 
 Route.group(() => {
@@ -45,8 +45,8 @@ Route.group(() => {
   Route.patch('/recipes/:id', 'RecipesController.update')
   Route.delete('/recipes/:id', 'RecipesController.destroy')
 
-  Route.post('/comments', 'CommentsController.store')
-  Route.delete('/comments/:id', 'CommentsController.destroy')
+  Route.post('/recipes/:recipeid/comments', 'CommentsController.store')
+  Route.delete('/recipes/:recipeid/comments/:commentid', 'CommentsController.destroy')
 
   Route.post('/favorites', 'FavoritesController.store')
   Route.delete('/favorites/:id', 'FavoritesController.destroy')
