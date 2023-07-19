@@ -25,15 +25,14 @@ Route.post('/users', 'UsersController.store')
 Route.post('/login', 'AuthController.login')
 
 // authenticated routes
-Route.post('/logout', 'AuthController.logout').middleware(['auth'])
+Route.group(() => {
+  Route.get('/users/:id', 'UsersController.show')
+  Route.patch('/users/:id', 'UsersController.update')
+  Route.patch('/users/:id/password', 'UsersController.changePassword')
+}).middleware(['auth', 'UserRoutesAuth'])
 
-Route.get('/users', 'UsersController.show').middleware(['auth'])
-Route.patch('/users/:id', 'UsersController.update').middleware(['auth'])
-Route.patch('/users/:id/password', 'UsersController.changePassword').middleware(['auth'])
-
-Route.resource('/recipes', 'RecipesController')
-  .apiOnly()
-  .middleware({ '*': ['auth'] })
-Route.resource('/comments', 'CommentsController')
-  .apiOnly()
-  .middleware({ '*': ['auth'] })
+Route.group(() => {
+  Route.post('/logout', 'AuthController.logout')
+  Route.resource('/recipes', 'RecipesController').apiOnly()
+  Route.resource('/comments', 'CommentsController').apiOnly()
+}).middleware('auth')
