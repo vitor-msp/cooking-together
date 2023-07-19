@@ -21,15 +21,16 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 // public routes
-Route.post('/register', 'AuthUsersController.register')
-Route.post('/login', 'AuthUsersController.login')
-Route.post('/logout', 'AuthUsersController.logout')
+Route.post('/users', 'UsersController.store')
+Route.post('/login', 'AuthController.login')
 
 // authenticated routes
-Route.resource('/users', 'UsersController')
-  .apiOnly()
-  .middleware({ '*': ['auth'] })
+Route.post('/logout', 'AuthController.logout').middleware(['auth'])
+
+Route.get('/users', 'UsersController.show').middleware(['auth'])
+Route.patch('/users/:id', 'UsersController.update').middleware(['auth'])
 Route.patch('/users/:id/password', 'UsersController.changePassword').middleware(['auth'])
+
 Route.resource('/recipes', 'RecipesController')
   .apiOnly()
   .middleware({ '*': ['auth'] })
