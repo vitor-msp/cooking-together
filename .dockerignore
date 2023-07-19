@@ -1,0 +1,10 @@
+build
+node_modules
+tmp
+.dockerignore
+.env.example
+.env.test
+.gitignore
+docker-compose.yml
+Dockerfile
+README.md
