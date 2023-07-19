@@ -29,7 +29,7 @@ Route.group(() => {
   Route.get('/users/:id', 'UsersController.show')
   Route.patch('/users/:id', 'UsersController.update')
   Route.patch('/users/:id/password', 'UsersController.changePassword')
-}).middleware(['auth', 'UserRoutesAuth'])
+}).middleware(['auth', 'CheckParam'])
 
 Route.group(() => {
   Route.get('/recipes', 'RecipesController.index')
@@ -45,4 +45,4 @@ Route.group(() => {
   Route.delete('/recipes/:id', 'RecipesController.destroy')
 
   Route.resource('/comments', 'CommentsController').apiOnly()
-}).middleware(['auth', 'OtherRoutesAuth'])
+}).middleware(['auth', 'ModifyQuery'])

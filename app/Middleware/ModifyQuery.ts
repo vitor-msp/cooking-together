@@ -1,6 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class OtherRoutesAuth {
+export default class ModifyQuery {
   protected redirectTo = '/login'
 
   protected async setUserIdInQuery(
