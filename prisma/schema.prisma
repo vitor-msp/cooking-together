@@ -19,6 +19,7 @@ model Recipe {
   updatedAt          DateTime     @default(now())
   Comment            Comment[]
   userId             String
+  Favorite           Favorite[]
 }
 
 type Ingredient {
@@ -38,4 +39,11 @@ model Comment {
   userId    String
   text      String
   createdAt DateTime @default(now())
+}
+
+model Favorite {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+  recipeId String @db.ObjectId
+  userId   String
 }
