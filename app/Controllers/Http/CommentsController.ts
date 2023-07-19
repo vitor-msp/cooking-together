@@ -10,12 +10,13 @@ export default class CommentsController {
     if (!recipeId) throw new Error('missing recipeId')
     const recipe = await prisma.comment.findMany({
       where: { recipeId },
-      select: { text: true, createdAt: true, userId: true },
+      select: { id: true, text: true, createdAt: true, userId: true },
     })
     const userIdList = recipe.map((r) => r.userId)
     const users = await User.query().whereIn('idmain', userIdList).select(['idmain', 'name'])
-    return recipe.map(({ text, createdAt, userId }) => {
+    return recipe.map(({ id, text, createdAt, userId }) => {
       return {
+        id,
         text,
         createdAt: createdAt.toISOString(),
         user: this.findUser(users, userId),
