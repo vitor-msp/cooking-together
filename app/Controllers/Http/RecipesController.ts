@@ -1,6 +1,7 @@
 import { prisma } from '@ioc:Adonis/Addons/Prisma'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { Recipe } from 'App/Models/Recipe'
+import User from 'App/Models/User'
 import { QueryItems } from 'App/utils/QueryItems'
 
 type RecipeQuery = {
@@ -60,10 +61,12 @@ export default class RecipesController {
 
   public async show({ params }: HttpContextContract): Promise<Recipe> {
     const id: string = params.id
-    const recipe = await prisma.recipe.findUniqueOrThrow({
-      where: { id },
-      include: { User: { select: { id: true, name: true } } },
-    })
+    const recipe = await prisma.recipe.findUniqueOrThrow({ where: { id } })
+    const user = await User.query()
+      .where('idmain', recipe.userId)
+      .select(['idmain', 'name'])
+      .first()
+    if (!user) throw new Error('user not found')
     return {
       id: recipe.id,
       title: recipe.title,
@@ -75,15 +78,17 @@ export default class RecipesController {
       createdAt: recipe.createdAt.toISOString(),
       updatedAt: recipe.updatedAt.toISOString(),
       user: {
-        id: recipe.User.id,
-        name: recipe.User.name,
+        id: user.id,
+        name: user.name,
       },
     }
   }
 
   public async store({ request, response }: HttpContextContract): Promise<{ id: string }> {
     const input: Record<string, string> = request.body()
-    const { title, userId, ingredients, directions }: Recipe = input
+    const { title, ingredients, directions }: Recipe = input
+    const userId = QueryItems.parse(request.parsedUrl.query ?? '')['userId']
+    if (!userId) throw new Error('missing user id')
     const recipe = await prisma.recipe.create({
       data: {
         title,
@@ -103,9 +108,11 @@ export default class RecipesController {
 
   public async update({ request, params }: HttpContextContract): Promise<{ id: string }> {
     const id: string = params.id
+    const userId = QueryItems.parse(request.parsedUrl.query ?? '')['userId']
+    if (!userId) throw new Error('missing user id')
     const input: Record<string, string> = request.body()
     const recipe = await prisma.recipe.findUniqueOrThrow({
-      where: { id },
+      where: { id, userId },
       select: {
         id: true,
         title: true,
@@ -139,9 +146,11 @@ export default class RecipesController {
     }
   }
 
-  public async destroy({ params }: HttpContextContract): Promise<{ id: string }> {
+  public async destroy({ request, params }: HttpContextContract): Promise<{ id: string }> {
     const id: string = params.id
-    await prisma.recipe.delete({ where: { id } })
+    const userId = QueryItems.parse(request.parsedUrl.query ?? '')['userId']
+    if (!userId) throw new Error('missing user id')
+    await prisma.recipe.delete({ where: { id, userId } })
     return {
       id,
     }

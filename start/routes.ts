@@ -30,8 +30,19 @@ Route.group(() => {
   Route.patch('/users/:id', 'UsersController.update')
   Route.patch('/users/:id/password', 'UsersController.changePassword')
 }).middleware(['auth', 'UserRoutesAuth'])
+
+Route.group(() => {
+  Route.get('/recipes', 'RecipesController.index')
+  Route.get('/recipes/:id', 'RecipesController.show')
+}).middleware('auth')
+
 Route.group(() => {
   Route.post('/logout', 'AuthController.logout')
-  Route.resource('/recipes', 'RecipesController').apiOnly()
+
+  Route.post('/recipes', 'RecipesController.store')
+  Route.put('/recipes/:id', 'RecipesController.update')
+  Route.patch('/recipes/:id', 'RecipesController.update')
+  Route.delete('/recipes/:id', 'RecipesController.destroy')
+
   Route.resource('/comments', 'CommentsController').apiOnly()
 }).middleware(['auth', 'OtherRoutesAuth'])
