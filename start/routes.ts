@@ -23,12 +23,13 @@ import Route from '@ioc:Adonis/Core/Route'
 // public routes
 Route.post('/users', 'UsersController.store')
 Route.post('/login', 'AuthController.login')
+Route.post('/logout', 'AuthController.logout')
 
 // authenticated routes
 Route.group(() => {
   Route.get('/users/:id', 'UsersController.show')
-  Route.patch('/users/:id', 'UsersController.update')
-  Route.patch('/users/:id/password', 'UsersController.changePassword')
+  Route.put('/users/:id', 'UsersController.update')
+  Route.put('/users/:id/password', 'UsersController.changePassword')
 }).middleware(['auth', 'CheckParam'])
 
 Route.group(() => {
@@ -38,11 +39,8 @@ Route.group(() => {
 }).middleware('auth')
 
 Route.group(() => {
-  Route.post('/logout', 'AuthController.logout')
-
   Route.post('/recipes', 'RecipesController.store')
   Route.put('/recipes/:id', 'RecipesController.update')
-  Route.patch('/recipes/:id', 'RecipesController.update')
   Route.delete('/recipes/:id', 'RecipesController.destroy')
 
   Route.post('/recipes/:recipeid/comments', 'CommentsController.store')
